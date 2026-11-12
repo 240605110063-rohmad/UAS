@@ -31,22 +31,37 @@ memakai **geolocation**, **jadwal salat dinamis**, **notifikasi cuaca lokal**,
 
 ## Menjalankan
 
-API key OpenWeatherMap **tidak** ditanam di source code. Isi
-`env.json` (sudah di-gitignore) atau pakai `--dart-define`:
+### Konfigurasi API Key (Wajib)
 
+API key OpenWeatherMap **tidak** ditanam di source code. Anda wajib menyiapkannya
+agar aplikasi dapat mengambil data cuaca.
+
+1. **Siapkan `env.json`**
+   Salin `env.example.json` ke `env.json` lalu isi API key Anda:
+   ```json
+   {
+     "OPENWEATHER_API_KEY": "MASUKKAN_API_KEY_ANDA"
+   }
+   ```
+   `env.json` sudah masuk `.gitignore` sehingga aman tidak ter-commit.
+
+2. **Menjalankan via Terminal**
+   ```bash
+   flutter run --dart-define-from-file=env.json
+   ```
+
+3. **Menjalankan via Android Studio**
+   Kami telah menyediakan konfigurasi Run **`uaspraktikum (env.json)`**.
+   Cukup pilih konfigurasi tersebut di toolbar atas, lalu tekan **Run** / **Debug**.
+   Jika belum ada, tambahkan konfigurasi Flutter baru dengan argumen:
+   `--dart-define-from-file=env.json` di kolom *Additional run args*.
+
+### Build APK debug
 ```bash
-# cara 1: file env (lihat env.example.json)
-flutter run --dart-define-from-file=env.json
-
-# cara 2: langsung
-flutter run --dart-define=OPENWEATHER_API_KEY=<kunci-anda>
+flutter build apk --debug --dart-define-from-file=env.json
 ```
+Hasil: `build/app/outputs/flutter-apk/app-debug.apk`
 
-Build APK:
-
-```bash
-flutter build apk --dart-define-from-file=env.json
-```
 
 ## Teknologi
 

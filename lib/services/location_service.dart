@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -48,14 +49,18 @@ class LocationService {
       }
 
       try {
+        debugPrint('[LocationService] getCurrentPosition starting...');
         final position = await Geolocator.getCurrentPosition(
-          locationSettings: const LocationSettings(
-            accuracy: LocationAccuracy.medium,
+          locationSettings: AndroidSettings(
+            accuracy: LocationAccuracy.high,
             timeLimit: Duration(seconds: 20),
+            forceLocationManager: true, // Bypass GMS fused for emulator/native
           ),
         ).timeout(const Duration(seconds: 25));
+        debugPrint('[LocationService] position: ${position.latitude}, ${position.longitude}');
         return _toDeviceLocation(position);
       } on TimeoutException {
+        debugPrint('[LocationService] timeout');
         final lastKnown = await _lastKnownPosition();
         if (lastKnown != null) return lastKnown;
         throw const LocationFailure(
@@ -65,7 +70,8 @@ class LocationService {
         );
       } on LocationFailure {
         rethrow;
-      } catch (_) {
+      } catch (e) {
+        debugPrint('[LocationService] error: $e');
         final lastKnown = await _lastKnownPosition();
         if (lastKnown != null) return lastKnown;
         throw const LocationFailure(

@@ -127,15 +127,12 @@ Simpan screenshot ke `docs/screenshots/` lalu ganti tanda `⬜` menjadi
 
 | No | Bagian | Sebelum (UTS) | Sesudah (UAS) |
 |---|---|---|---|
-| 1 | Halaman utama | ⬜ `docs/screenshots/uts-01-cuaca.png` | ⬜ `docs/screenshots/uas-01-cuaca-gps.png` |
-| 2 | Prakiraan 5 hari | ⬜ `docs/screenshots/uts-02-forecast.png` | ⬜ `docs/screenshots/uas-02-forecast.png` |
-| 3 | Jadwal salat | — | ⬜ `docs/screenshots/uas-03-salat.png` |
-| 4 | Zikir dari server | — | ⬜ `docs/screenshots/uas-04-zikir.png` |
-| 5 | Pengaturan notifikasi | — | ⬜ `docs/screenshots/uas-05-notifikasi.png` |
-| 6 | Notifikasi muncul di panel | — | ⬜ `docs/screenshots/uas-06-notif-panel.png` |
-| 7 | Halaman informasi + tips | — | ⬜ `docs/screenshots/uas-07-informasi.png` |
-| 8 | Error izin lokasi/GPS | ⬜ `docs/screenshots/uts-03-error.png` | ⬜ `docs/screenshots/uas-08-error-lokasi.png` |
-| 9 | Error server zikir (mode pesawat) | — | ⬜ `docs/screenshots/uas-09-error-zikir.png` |
+| 1 | Halaman utama (cuaca + GPS) | ⬜ `docs/screenshots/uts-01-cuaca.png` | ![Cuaca GPS](docs/screenshots/weather.png) |
+| 2 | Prakiraan 5 hari | ⬜ `docs/screenshots/uts-02-forecast.png` | ![Prakiraan](docs/screenshots/weather.png) |
+| 3 | Jadwal salat + hitung mundur | — | ![Jadwal Salat](docs/screenshots/prayer.png) |
+| 4 | Zikir dari server | — | ![Zikir](docs/screenshots/prayer_zikir.png) |
+| 5 | Pengaturan notifikasi | — | ![Notifikasi](docs/screenshots/notification.png) |
+| 6 | Halaman informasi + tips | — | ![Informasi](docs/screenshots/information.png) |
 
 Cara mengambil: jalankan
 `flutter run --dart-define-from-file=env.json` pada emulator/HP, lalu
