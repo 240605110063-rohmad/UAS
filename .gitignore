@@ -46,3 +46,15 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Secrets (JANGAN commit file berisi API key)
+.env
+.env.*
+env.json
+*.env.json
+key.properties
+*.jks
+*.keystore
+
+# Template konfigurasi boleh di-commit (tidak berisi key asli)
+!env.example.json

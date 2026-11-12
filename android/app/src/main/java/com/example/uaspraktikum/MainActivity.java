@@ -1,4 +1,4 @@
-package com.example.utspraktikum;
+package com.example.uaspraktikum;
 
 import io.flutter.embedding.android.FlutterActivity;
 

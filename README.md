@@ -1,17 +1,110 @@
-# utspraktikum
+# uaspraktikum — Pelacak Cuaca (UAS Praktikum)
 
-A new Flutter project.
+Pengembangan lanjutan aplikasi prakiraan cuaca dari UTS. Aplikasi sekarang
+memakai **geolocation**, **jadwal salat dinamis**, **notifikasi cuaca lokal**,
+**halaman informasi**, dan **data zikir dari server**.
 
-## Getting Started
+## Fitur
 
-This project is a starting point for a Flutter application.
+1. **Prakiraan cuaca berbasis lokasi**
+   - Deteksi GPS otomatis saat aplikasi dibuka (`geolocator`).
+   - Prakiraan 5 hari dari OpenWeather (koordinat, bukan nama kota).
+   - Pencarian kota manual lewat geocoding sebagai alternatif bila izin
+     lokasi ditolak.
+   - Penanganan error terpisah: GPS mati, izin ditolak, izin permanen,
+     timeout GPS, offline, API key salah, kuota habis, server error.
+2. **Jadwal salat dinamis** (tab Jadwal Salat)
+   - Subuh, Zuhur, Asar, Magrib, Isya (+ Syuruq) dari AlAdhan API.
+   - Mengikuti koordinat lokasi aktif; metode perhitungan Kemenag (20).
+   - Hitung mundur salat berikutnya + tanggal Hijriah.
+3. **Zikir ba'da salat dari server**
+   - JSON diambil lewat HTTP GET, lengkap arab/latin/arti/ulangan.
+   - Ada indikator loading, pesan kegagalan koneksi, dan tombol "Coba Lagi".
+4. **Notifikasi cuaca lokal**
+   - `flutter_local_notifications`: peringatan hujan & info cuaca cerah
+     dijadwalkan dari prakiraan terbaru.
+   - Jam pengingat dapat diatur; ada tombol kirim notifikasi uji.
+   - Bukan push notification server; penjadwalan lokal di perangkat.
+5. **Halaman informasi**
+   - Tentang aplikasi, daftar fitur, sumber data, panduan pemakaian,
+     tips kesehatan per kondisi cuaca, info pengembang.
 
-A few resources to get you started if this is your first Flutter project:
+## Menjalankan
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+API key OpenWeatherMap **tidak** ditanam di source code. Isi
+`env.json` (sudah di-gitignore) atau pakai `--dart-define`:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+# cara 1: file env (lihat env.example.json)
+flutter run --dart-define-from-file=env.json
+
+# cara 2: langsung
+flutter run --dart-define=OPENWEATHER_API_KEY=<kunci-anda>
+```
+
+Build APK:
+
+```bash
+flutter build apk --dart-define-from-file=env.json
+```
+
+## Teknologi
+
+| Kebutuhan | Paket / layanan |
+|---|---|
+| Cuaca, geocoding, reverse geocoding | OpenWeatherMap API (api.openweathermap.org) |
+| Jadwal salat + Hijriah | AlAdhan API (api.aladhan.com, method=20) |
+| Zikir ba'da salat | JSON statis di `https://api.pastes.dev/r8hMzByuMe` |
+| Lokasi perangkat | `geolocator` |
+| Notifikasi lokal | `flutter_local_notifications`, `timezone`, `flutter_timezone` |
+| Penyimpanan pengaturan | `shared_preferences` |
+| HTTP | `http` |
+| Format tanggal/angka | `intl` |
+
+## Struktur kode
+
+```
+lib/
+├── main.dart                     # bootstrap + injeksi AppState
+├── config/
+│   ├── api_config.dart           # host/path API + URL zikir
+│   └── app_info.dart             # identitas aplikasi & pengembang
+├── models/
+│   ├── weather.dart              # cuaca saat ini (+ koordinat)
+│   ├── forecast.dart             # prakiraan harian
+│   ├── weather_bundle.dart       # cuaca + prakiraan + label lokasi
+│   ├── geo_place.dart            # hasil geocoding
+│   ├── device_location.dart      # koordinat GPS
+│   ├── prayer_times.dart         # waktu salat & Hijriah
+│   ├── notification_settings.dart
+│   └── zikir.dart                # model data zikir dari server
+├── services/
+│   ├── weather_service.dart      # OpenWeather (koordinat + geocoding)
+│   ├── prayer_service.dart       # AlAdhan
+│   ├── zikir_service.dart        # fetch JSON zikir
+│   ├── location_service.dart     # geolocator + pemetaan error
+│   ├── notification_service.dart # penjadwalan notifikasi lokal
+│   ├── weather_alert_planner.dart# aturan hujan/cerah -> notifikasi
+│   ├── settings_store.dart       # SharedPreferences
+│   └── app_exception.dart        # exception domain
+├── state/app_state.dart          # lokasi aktif, cuaca, pengaturan
+├── pages/
+│   ├── home_shell.dart           # navigasi 4 tab
+│   ├── weather_home_page.dart    # GPS + pencarian kota + prakiraan
+│   ├── prayer_page.dart          # jadwal salat + zikir
+│   ├── notification_settings_page.dart
+│   └── information_page.dart
+├── widgets/zikir_section.dart    # UI zikir + state loading/error
+└── ui/app_style.dart             # warna, gradasi, kartu
+```
+
+## Pengujian
+
+```bash
+flutter analyze
+flutter test
+```
+
+Cakupan: 48 pengujian (service cuaca, service jadwal salat, service zikir,
+perencana notifikasi, AppState, widget halaman, navigasi, error handling).
+Laporan pengembangan lengkap ada di [LAPORAN.md](LAPORAN.md).
